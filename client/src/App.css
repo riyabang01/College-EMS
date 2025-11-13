@@ -1,0 +1,231 @@
+/* General Styles */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.container {
+  flex: 1;
+  padding-bottom: 60px; /* Ensure space for the fixed footer */
+  margin-top: 60px; /* Ensure content starts below the header */
+}
+
+/* Header */
+.custom-navbar {
+  background-color: #0f66bd; /* Custom background color */
+  height: 60px; /* Set fixed height */
+}
+
+.navbar-brand, .navbar-nav .nav-link {
+  color: #fff !important; /* White color */
+}
+
+.navbar-nav .nav-link:hover {
+  color: #ffd700 !important; /* Golden color on hover */
+}
+
+.nav-link-custom {
+  transition: background-color 0.3s ease, color 0.3s ease; /* Add transition for hover effect */
+}
+
+.nav-link-custom:hover {
+  background-color: #138496; /* Darker shade for hover effect */
+  color: #d3b922 !important; /* Golden color on hover */
+  border-radius: 5px;
+}
+
+/* Footer */
+.footer {
+  background-color: #0f66bd; /* Background color */
+  color: #fff; /* White text color */
+  padding: 1rem 0;
+  text-align: center;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px; /* Set fixed height same as navbar */
+}
+
+/* Home page */
+/* Home Page Styling */
+.card-hover {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+/* AuthForm */
+.auth-form-container {
+  max-width: 400px;
+  margin: 3rem auto; /* Add margin to move the form further down */
+  padding: 2rem;
+  background-color: #ffffff; /* Add background color */
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  flex: 1; /* Allow the form to grow and push the footer down */
+}
+
+.auth-form-container .form-group {
+  margin-bottom: 1.5rem; /* Add space between form groups */
+}
+
+input[type="file"] {
+  cursor: pointer;
+}
+
+
+/* AdminDashboard */
+.admin-dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-dashboard-table {
+  margin-top: 20px;
+}
+
+.admin-dashboard-modal-body {
+  padding: 20px;
+}
+
+.admin-dashboard-button {
+  margin-top: 10px;
+}
+
+/* EventList */
+.event-list-container {
+  margin-top: 20px;
+}
+
+.event-list-card {
+  margin-bottom: 20px;
+  transition: transform 0.3s ease; /* Add transition for hover effect */
+}
+
+.event-list-card:hover {
+  transform: scale(1.05); /* Scale up on hover */
+}
+
+/* MyEvents */
+.my-events-container {
+  margin-top: 20px;
+}
+
+.my-events-card {
+  margin-bottom: 20px;
+  transition: transform 0.3s ease; /* Add transition for hover effect */
+}
+
+.my-events-card:hover {
+  transform: scale(1.05); /* Scale up on hover */
+}
+
+/* Contact */
+.contact-container {
+  margin-top: 20px;
+}
+
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* About */
+.about-container {
+  max-width: 1000px; /* Increase the max-width for a larger container */
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.about-container h2 {
+  margin-bottom: 1rem; /* Reduce the margin-bottom for the heading */
+}
+
+.about-container p {
+  margin-bottom: 1.5rem; /* Add space after each paragraph */
+}
+
+.about-container ul {
+  margin-bottom: 1.5rem; /* Add space after the list */
+  padding-left: 1.5rem; /* Add padding to the left of the list */
+}
+
+.about-container ul li {
+  margin-bottom: 0.5rem; /* Add space between list items */
+}
+
+.value-highlight {
+  font-weight: bold;
+  color: #0f66bd; /* Custom color for the highlighted values */
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .auth-form-container,
+  .contact-form,
+  .about-container {
+    padding: 1rem;
+  }
+
+  .admin-dashboard-container,
+  .event-list-container,
+  .my-events-container {
+    padding: 0 1rem;
+  }
+
+  .admin-dashboard-table,
+  .event-list-card,
+  .my-events-card {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .auth-form-container,
+  .contact-form,
+  .about-container {
+    padding: 0.5rem;
+  }
+
+  .admin-dashboard-container,
+  .event-list-container,
+  .my-events-container {
+    padding: 0 0.5rem;
+  }
+
+  .admin-dashboard-table,
+  .event-list-card,
+  .my-events-card {
+    margin-bottom: 0.5rem;
+  }
+}
