@@ -2,15 +2,15 @@ const asyncHandler = require('express-async-handler');
 const mongoose = require('mongoose');
 const Event = require('../models/eventModel');
 
-// ✅ Get Upcoming Events
+
 const getUpcomingEvents = asyncHandler(async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: 'User not authenticated' });
   }
 
-  // ✅ Upcoming events ko find karo aur `registeredUsers` ko populate karo
+
   const events = await Event.find({ date: { $gte: new Date() } })
-    .populate('registeredUsers', 'name email'); // ✅ Sirf `name` aur `email` ko fetch karo
+    .populate('registeredUsers', 'name email'); 
 
   if (!events.length) {
     return res.status(404).json({ message: 'No upcoming events found' });
@@ -29,7 +29,7 @@ const getUpcomingEvents = asyncHandler(async (req, res) => {
   res.status(200).json(updatedEvents);
 });
 
-// ✅ Register for Event
+
 const registerEvent = asyncHandler(async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: 'User not authenticated' });
@@ -37,7 +37,7 @@ const registerEvent = asyncHandler(async (req, res) => {
 
   const { id } = req.params;
 
-  // ✅ Check for valid ObjectId
+
   if (!mongoose.isValidObjectId(id)) {
     return res.status(400).json({ message: 'Invalid event ID' });
   }
@@ -62,7 +62,7 @@ const registerEvent = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Registered successfully' });
 });
 
-// ✅ Unregister from Event
+
 const unregisterEvent = asyncHandler(async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: 'User not authenticated' });
@@ -70,7 +70,7 @@ const unregisterEvent = asyncHandler(async (req, res) => {
 
   const { id } = req.params;
 
-  // ✅ Check for valid ObjectId
+ 
   if (!mongoose.isValidObjectId(id)) {
     return res.status(400).json({ message: 'Invalid event ID' });
   }

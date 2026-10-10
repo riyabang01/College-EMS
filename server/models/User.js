@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs'); // Using bcryptjs for hashing passwords
+const bcrypt = require('bcryptjs'); 
 
-// Define the user schema
+
 const userSchema = new mongoose.Schema(
     {
       name: { 
@@ -27,34 +27,34 @@ const userSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-// Middleware to hash the password before saving the user
+
 userSchema.pre('save', async function (next) {
-  console.log("🔥 Pre-save middleware triggered"); // ✅ Debugging
+  console.log("🔥 Pre-save middleware triggered"); 
   if (!this.isModified('password')) return next();
 
   try {
     const salt = await bcrypt.genSalt(10);
-    console.log("Generated Salt:", salt); // ✅ Debugging
+    console.log("Generated Salt:", salt); 
     this.password = await bcrypt.hash(this.password, salt);
-    console.log("Final Hashed Password:", this.password); // ✅ Debugging
+    console.log("Final Hashed Password:", this.password); 
     next();
   } catch (error) {
     next(error);
   }
 });
 
-// Instance method to compare passwords
+
 userSchema.methods.comparePassword = async function (candidatePassword) {
   try {
-    console.log("Candidate Password:", candidatePassword); // ✅ Debugging
-    console.log("Stored Hashed Password:", this.password); // ✅ Debugging
+    console.log("Candidate Password:", candidatePassword); 
+    console.log("Stored Hashed Password:", this.password); 
     return await bcrypt.compare(candidatePassword, this.password);
   } catch (error) {
     throw new Error('Password comparison failed');
   }
 };
 
-// Model method to check if the email is already registered
+
 userSchema.statics.isEmailTaken = async function (email) {
   const user = await this.findOne({ email });
   return user ? true : false;

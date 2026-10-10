@@ -28,14 +28,14 @@ const UploadForm = ({ onUploadSuccess }) => {
       const { data } = await axios.post('/api/gallery/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${user.token}`, // ✅ Send token
+          Authorization: `Bearer ${user.token}`, 
         },
       });
 
-      alert('✅ Image uploaded successfully!');
-      onUploadSuccess(); // ✅ Refresh gallery
+      alert('Image uploaded successfully!');
+      onUploadSuccess(); 
     } catch (error) {
-      console.error('❌ Upload Error:', error);
+      console.error('Upload Error:', error);
       alert(error.response?.data?.message || 'Error uploading image');
     } finally {
       setUploading(false);

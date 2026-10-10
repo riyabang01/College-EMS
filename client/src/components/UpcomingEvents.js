@@ -8,6 +8,8 @@ const UpcomingEvents = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  const baseURL = process.env.REACT_APP_API_URL || "";
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -17,13 +19,10 @@ const UpcomingEvents = () => {
           return;
         }
     
-        const response = await axios.get("http://localhost:8000/api/events/upcoming", {
+        const response = await axios.get(`${baseURL}/api/events/upcoming`, {
           headers: { Authorization: `Bearer ${token}` },
         });
     
-        console.log("📢 API Response:", response.data); // ✅ Check event data structure
-        
-        // ✅ Map 'id' to '_id'
         const mappedEvents = response.data.map(event => ({
           ...event,
           _id: event._id || event.id
@@ -31,7 +30,7 @@ const UpcomingEvents = () => {
 
         setEvents(mappedEvents);
       } catch (error) {
-        console.error("❌ Error fetching events:", error.response?.data || error.message);
+        console.error("Error fetching events:", error.response?.data || error.message);
         setError(error.response?.data?.message || "Failed to fetch events");
       } finally {
         setLoading(false);
@@ -39,12 +38,10 @@ const UpcomingEvents = () => {
     };
     
     fetchEvents();
-  }, []);
+  }, [baseURL]);
 
-  // ✅ Register for an event
   const handleRegister = async (eventId) => {
     if (!eventId) {
-      console.error('❌ Invalid event ID:', eventId);
       setError('Invalid event ID');
       setTimeout(() => setError(''), 2000);
       return;
@@ -57,10 +54,8 @@ const UpcomingEvents = () => {
         return;
       }
   
-      console.log('📢 Registering for Event ID:', eventId); // ✅ Debug log
-  
       const response = await axios.post(
-        `http://localhost:8000/api/events/${eventId}/register`,
+        `${baseURL}/api/events/${eventId}/register`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -81,7 +76,6 @@ const UpcomingEvents = () => {
     }
   };
 
-  // ✅ Unregister from an event
   const handleUnregister = async (eventId) => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -92,15 +86,14 @@ const UpcomingEvents = () => {
       }
 
       const response = await axios.delete(
-        `http://localhost:8000/api/events/${eventId}/unregister`,
+        `${baseURL}/api/events/${eventId}/unregister`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
       setMessage(response.data.message || "Unregistered successfully!");
-
-      // ✅ Update state based on server response
+      
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event._id === eventId ? { ...event, isRegistered: false } : event
@@ -139,20 +132,14 @@ const UpcomingEvents = () => {
                   {event.isRegistered ? (
                     <Button 
                       variant="danger" 
-                      onClick={() => {
-                        console.log("🛠️ Unregistering for event ID:", event._id); // ✅ Check event ID
-                        handleUnregister(event._id);
-                      }}
+                      onClick={() => handleUnregister(event._id)}
                     >
                       Unregister
                     </Button>
                   ) : (
                     <Button 
                       variant="primary" 
-                      onClick={() => {
-                        console.log("🛠️ Registering for event ID:", event._id); // ✅ Check event ID
-                        handleRegister(event._id);
-                      }}
+                      onClick={() => handleRegister(event._id)}
                     >
                       Register
                     </Button>

@@ -1,9 +1,9 @@
 const express = require('express');
 const User = require('../models/User');
-const { protect } = require('../middleware/auth'); // Correct import
+const { protect } = require('../middleware/auth'); 
 const router = express.Router();
 
-// Get all users (Admin only)
+
 router.get('/', protect, async (req, res) => {
     try {
         const users = await User.find().select('-password');
@@ -13,11 +13,11 @@ router.get('/', protect, async (req, res) => {
     }
 });
 
-// Update user profile
-router.put('/update', protect, async (req, res) => { // Add protect middleware
+
+router.put('/update', protect, async (req, res) => { 
     const { name, email } = req.body;
     try {
-        const user = await User.findById(req.user._id); // Correct user ID retrieval
+        const user = await User.findById(req.user._id); 
         if (user) {
             user.name = name || user.name;
             user.email = email || user.email;

@@ -1,9 +1,9 @@
-require('dotenv').config(); // Add this at the top
+require('dotenv').config(); 
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 
-router.post('/', async (req, res) => { // ✅ Route ko '/' rakho
+router.post('/', async (req, res) => { 
   const { name, email, message } = req.body;
 
   if (!name || !email || !message) {
@@ -21,7 +21,7 @@ router.post('/', async (req, res) => { // ✅ Route ko '/' rakho
 
     const mailOptions = {
       from: email,
-      to: process.env.EMAIL_USER, // ✅ Receive messages at your project email
+      to: process.env.EMAIL_USER,
       subject: `New Contact Form Submission from ${name}`,
       text: `You received a new message:\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
     };

@@ -1,4 +1,4 @@
-/* General Styles */
+
 html, body {
   height: 100%;
   margin: 0;
@@ -21,38 +21,38 @@ body {
 
 .container {
   flex: 1;
-  padding-bottom: 60px; /* Ensure space for the fixed footer */
-  margin-top: 60px; /* Ensure content starts below the header */
+  padding-bottom: 60px; 
+  margin-top: 60px;
 }
 
-/* Header */
+
 .custom-navbar {
-  background-color: #0f66bd; /* Custom background color */
-  height: 60px; /* Set fixed height */
+  background-color: #0f66bd; 
+  height: 60px; 
 }
 
 .navbar-brand, .navbar-nav .nav-link {
-  color: #fff !important; /* White color */
+  color: #fff !important; 
 }
 
 .navbar-nav .nav-link:hover {
-  color: #ffd700 !important; /* Golden color on hover */
+  color: #ffd700 !important; 
 }
 
 .nav-link-custom {
-  transition: background-color 0.3s ease, color 0.3s ease; /* Add transition for hover effect */
+  transition: background-color 0.3s ease, color 0.3s ease; 
 }
 
 .nav-link-custom:hover {
-  background-color: #138496; /* Darker shade for hover effect */
-  color: #d3b922 !important; /* Golden color on hover */
+  background-color: #138496; 
+  color: #d3b922 !important; 
   border-radius: 5px;
 }
 
-/* Footer */
+
 .footer {
-  background-color: #0f66bd; /* Background color */
-  color: #fff; /* White text color */
+  background-color: #0f66bd; 
+  color: #fff; 
   padding: 1rem 0;
   text-align: center;
   width: 100%;
@@ -62,11 +62,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60px; /* Set fixed height same as navbar */
+  height: 60px; 
 }
 
-/* Home page */
-/* Home Page Styling */
+
 .card-hover {
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
@@ -77,19 +76,19 @@ body {
 }
 
 
-/* AuthForm */
+
 .auth-form-container {
   max-width: 400px;
-  margin: 3rem auto; /* Add margin to move the form further down */
+  margin: 3rem auto;
   padding: 2rem;
-  background-color: #ffffff; /* Add background color */
+  background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  flex: 1; /* Allow the form to grow and push the footer down */
+  flex: 1; 
 }
 
 .auth-form-container .form-group {
-  margin-bottom: 1.5rem; /* Add space between form groups */
+  margin-bottom: 1.5rem;
 }
 
 input[type="file"] {
@@ -97,7 +96,7 @@ input[type="file"] {
 }
 
 
-/* AdminDashboard */
+
 .admin-dashboard-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -115,35 +114,35 @@ input[type="file"] {
   margin-top: 10px;
 }
 
-/* EventList */
+
 .event-list-container {
   margin-top: 20px;
 }
 
 .event-list-card {
   margin-bottom: 20px;
-  transition: transform 0.3s ease; /* Add transition for hover effect */
+  transition: transform 0.3s ease; 
 }
 
 .event-list-card:hover {
-  transform: scale(1.05); /* Scale up on hover */
+  transform: scale(1.05); 
 }
 
-/* MyEvents */
+
 .my-events-container {
   margin-top: 20px;
 }
 
 .my-events-card {
   margin-bottom: 20px;
-  transition: transform 0.3s ease; /* Add transition for hover effect */
+  transition: transform 0.3s ease; 
 }
 
 .my-events-card:hover {
-  transform: scale(1.05); /* Scale up on hover */
+  transform: scale(1.05); 
 }
 
-/* Contact */
+
 .contact-container {
   margin-top: 20px;
 }
@@ -157,9 +156,9 @@ input[type="file"] {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* About */
+
 .about-container {
-  max-width: 1000px; /* Increase the max-width for a larger container */
+  max-width: 1000px; 
   margin: 0 auto;
   padding: 2rem;
   background-color: #fff;
@@ -168,28 +167,28 @@ input[type="file"] {
 }
 
 .about-container h2 {
-  margin-bottom: 1rem; /* Reduce the margin-bottom for the heading */
+  margin-bottom: 1rem; 
 }
 
 .about-container p {
-  margin-bottom: 1.5rem; /* Add space after each paragraph */
+  margin-bottom: 1.5rem; 
 }
 
 .about-container ul {
-  margin-bottom: 1.5rem; /* Add space after the list */
-  padding-left: 1.5rem; /* Add padding to the left of the list */
+  margin-bottom: 1.5rem; 
+  padding-left: 1.5rem; 
 }
 
 .about-container ul li {
-  margin-bottom: 0.5rem; /* Add space between list items */
+  margin-bottom: 0.5rem; 
 }
 
 .value-highlight {
   font-weight: bold;
-  color: #0f66bd; /* Custom color for the highlighted values */
+  color: #0f66bd;
 }
 
-/* Media Queries */
+
 @media (max-width: 768px) {
   .auth-form-container,
   .contact-form,

@@ -3,8 +3,8 @@ import { Button, Form, Container, Row, Col, Card } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
-const AuthForm = ({ setUser }) => {
-  const [name, setName] = useState(""); // Added name state
+const AuthForm = ({ setUser = () => {} }) => {
+  const [name, setName] = useState(""); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
@@ -33,22 +33,21 @@ const AuthForm = ({ setUser }) => {
       const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
       const payload = isLogin
         ? { email, password }
-        : { name, email, password, role }; // Include name in signup request
+        : { name, email, password, role };
 
-      const response = await axios.post(`http://localhost:8000${endpoint}`, payload);
+      const baseURL = process.env.REACT_APP_API_URL || "";
+      const response = await axios.post(`${baseURL}${endpoint}`, payload);
 
       if (response.data.accessToken && response.data.refreshToken) {
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
+        localStorage.setItem("role", response.data.user.role);
         localStorage.setItem("user", JSON.stringify(response.data.user));
 
-        setUser(response.data.user);
+        setUser({ token: response.data.accessToken, role: response.data.user.role });
 
-        if (!isLogin) {
-          navigate("/login"); // Redirect to login after signup
-        } else {
-          navigate(response.data.user.role === "admin" ? "/admin-dashboard" : "/");
-        }
+        const targetRole = response.data.user.role;
+        navigate(targetRole === "admin" ? "/admin-dashboard" : from, { replace: true });
       } else {
         setError(isLogin ? "Login failed: Missing token in response." : "Signup failed: Missing token in response.");
       }
@@ -77,7 +76,7 @@ const AuthForm = ({ setUser }) => {
                       placeholder="Enter full name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      required={!isLogin} // Name is required only for signup
+                      required={!isLogin} 
                       name="name"
                       autoComplete="new-name"
                     />

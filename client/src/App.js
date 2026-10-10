@@ -17,7 +17,7 @@ import { AuthProvider } from './context/AuthContext';
 const App = () => {
   const [user, setUser] = useState(null);
 
-  // Check localStorage for access token and role on page load
+  
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     const role = localStorage.getItem('role');
@@ -27,14 +27,14 @@ const App = () => {
     }
   }, []);
 
-  // Handle logout
+ 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('role');
-    setUser(null);  // Clear user state
+    setUser(null);  
   };
 
-  // ProtectedRoute checks if user is authenticated
+ 
   const ProtectedRoute = ({ children, role }) => {
     const location = useLocation();
     
@@ -49,7 +49,7 @@ const App = () => {
     return children;
   };
 
-  // AuthRoute checks if user is already logged in
+  
   const AuthRoute = ({ children }) => {
     if (user) {
       return <Navigate to="/" replace />;

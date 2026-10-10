@@ -9,10 +9,10 @@ const mongoose = require('mongoose');
 
 const router = express.Router();
 
-// ✅ Serve static files for uploaded images
+
 router.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// ✅ Create an event with image upload (Admin only)
+
 router.post('/', protect, admin, upload.single('image'), async (req, res) => {
   const { title, description, date, location } = req.body;
 
@@ -30,12 +30,12 @@ router.post('/', protect, admin, upload.single('image'), async (req, res) => {
 
     res.status(201).json(event);
   } catch (error) {
-    console.error('❌ Error creating event:', error);
+    console.error('Error creating event:', error);
     res.status(500).json({ message: 'Failed to create event' });
   }
 });
 
-// ✅ Get all events (Admin only)
+
 router.get('/admin-events', protect, admin, async (req, res) => {
   try {
     const events = await Event.find({});
@@ -46,7 +46,7 @@ router.get('/admin-events', protect, admin, async (req, res) => {
 });
 
 
-// ✅ Get all events (Admin sees all, users see their own)
+
 router.get('/', protect, async (req, res) => {
   try {
     const events = req.user.role === 'admin' 
@@ -55,18 +55,18 @@ router.get('/', protect, async (req, res) => {
 
     res.json(events);
   } catch (error) {
-    console.error('❌ Error fetching events:', error);
+    console.error('Error fetching events:', error);
     res.status(500).json({ message: 'Failed to fetch events' });
   }
 });
 
 
-// ✅ Get all upcoming events (Visible to all logged-in users)
+
 router.get('/upcoming', protect, async (req, res) => {
   try {
     const events = await Event.find({ date: { $gte: new Date() } });
 
-    // ✅ Include registration status
+    
     const formattedEvents = events.map(event => ({
       id: event._id || event.id,
       title: event.title,
@@ -75,22 +75,22 @@ router.get('/upcoming', protect, async (req, res) => {
       location: event.location,
       image: event.image ? `${req.protocol}://${req.get('host')}${event.image}` : null,
       totalRegistrants: event.registeredUsers.length,
-      isRegistered: event.registeredUsers.includes(req.user._id), // ✅ Registration status
+      isRegistered: event.registeredUsers.includes(req.user._id), 
     }));
 
     res.json(formattedEvents);
   } catch (error) {
-    console.error('❌ Error fetching upcoming events:', error);
+    console.error('Error fetching upcoming events:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
 
 
-// ✅ Register for an event
+
 router.post('/:id/register', protect, async (req, res) => {
   try {
-    const eventId = String(req.params.id); // ✅ Convert to String
+    const eventId = String(req.params.id); 
     console.log("🔎 Registering for event ID:", eventId);
 
     if (!mongoose.Types.ObjectId.isValid(eventId)) {
@@ -109,16 +109,16 @@ router.post('/:id/register', protect, async (req, res) => {
     event.registeredUsers.push(req.user._id);
     await event.save();
 
-    console.log("✅ Registered successfully!");
+    console.log("Registered successfully!");
     res.status(200).json({ message: 'Successfully registered for the event' });
   } catch (error) {
-    console.error('❌ Error registering for event:', error);
+    console.error('Error registering for event:', error);
     res.status(500).json({ message: 'Failed to register for the event' });
   }
 });
 
 
-// ✅ Unregister from an event
+
 router.delete('/:id/unregister', protect, async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -139,7 +139,7 @@ router.delete('/:id/unregister', protect, async (req, res) => {
   }
 });
 
-// ✅ Get available events with registration status
+
 router.get('/available', protect, async (req, res) => {
   try {
     const events = await Event.find();
@@ -163,7 +163,7 @@ router.get('/available', protect, async (req, res) => {
 
 
 
-// ✅ Get my registered events 
+
 router.get('/myevents', protect, async (req, res) => {
   try {
     const events = await Event.find({ 
@@ -178,7 +178,7 @@ router.get('/myevents', protect, async (req, res) => {
 });
 
 
-// ✅ Update an event (Admin only)
+
 router.put('/:id', protect, admin, upload.single('image'), async (req, res) => {
   const { title, description, date, location } = req.body;
 
@@ -206,7 +206,7 @@ router.put('/:id', protect, admin, upload.single('image'), async (req, res) => {
   }
 });
 
-// ✅ Delete an event (Admin only)
+
 router.delete('/:id', protect, admin, async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -223,7 +223,7 @@ router.delete('/:id', protect, admin, async (req, res) => {
   }
 });
 
-// ✅ Mark attendees (Admin only)
+
 router.put('/:id/attendees', protect, admin, async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -242,7 +242,7 @@ router.put('/:id/attendees', protect, admin, async (req, res) => {
   }
 });
 
-// ✅ Get registrants for a specific event (Admin only)
+
 router.get('/:eventId/registrants', protect, admin, async (req, res) => {
   try {
     const event = await Event.findById(req.params.eventId).populate('registeredUsers', 'name');

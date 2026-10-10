@@ -1,3 +1,8 @@
+const buffer = require('buffer');
+if (!buffer.SlowBuffer) {
+    buffer.SlowBuffer = class SlowBuffer extends Buffer {};
+}
+
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
@@ -11,20 +16,15 @@ const cookieParser = require('cookie-parser');
 
 dotenv.config();
 
-// ✅ Check for .env file
 if (!process.env.MONGO_URI || !process.env.FRONTEND_URL) {
-  console.error('❌ Missing environment variables!');
+  console.error('Missing environment variables!');
   process.exit(1);
 }
 
-// ✅ Connect to Database
-connectDB();
-
 const app = express();
 
-// ✅ Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // ✅ Handle form data
+app.use(express.urlencoded({ extended: true })); 
 app.use(cookieParser());
 app.use(cors({
   origin: process.env.FRONTEND_URL,
@@ -32,20 +32,30 @@ app.use(cors({
   credentials: true
 }));
 
-// ✅ Routes
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/contact', contactRoutes);
 
-// ✅ Serve static files for uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// ✅ Error Handling Middleware
 app.use((err, req, res, next) => {
-  console.error(`❌ Error: ${err.message}`);
+  console.error(`Error: ${err.message}`);
   res.status(500).json({ message: err.message });
 });
 
-const PORT = process.env.PORT ;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 8000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+module.exports = app;

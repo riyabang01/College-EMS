@@ -6,4 +6,4 @@ const generateHash = async (password) => {
   console.log(`Bcrypt hash for password "${password}": ${hash}`);
 };
 
-generateHash('123456'); // Replace 'yourpassword' with the actual password you want to hash
+generateHash('123456'); 

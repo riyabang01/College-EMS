@@ -9,25 +9,25 @@ const EventList = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const baseURL = process.env.REACT_APP_API_URL || "";
+
   const fetchEvents = async () => {
     const token = localStorage.getItem('accessToken');
     
     if (token) {
       try {
-        const response = await axios.get('http://localhost:8000/api/events/available', {
+        const response = await axios.get(`${baseURL}/api/events/available`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
         setEvents(response.data);
       } catch (error) {
-        console.error("❌ Error fetching events:", error.response?.data || error.message);
+        console.error("Error fetching events:", error.response?.data || error.message);
       } finally {
         setLoading(false);
       }
     } else {
-      console.log("❌ No auth token found. Redirecting to login.");
       navigate('/login');
     }
   };
@@ -36,7 +36,6 @@ const EventList = () => {
     fetchEvents();
   }, []);
 
-  // ✅ Function to get event-specific image from Lorem Picsum using seed
   const getEventImage = (title) => {
     const seed = encodeURIComponent(title);
     return `https://picsum.photos/seed/${seed}/400/250`;
@@ -55,21 +54,18 @@ const EventList = () => {
             <Col key={event._id} md={4} className="mb-4">
               <Card className="event-card">
                 <div className="card-image-wrapper">
-                  {/* ✅ Backend image ho toh dikhegi, warna event-specific image ayegi */}
                   <Card.Img 
                     variant="top" 
                     src={event.image 
-                      ? `http://localhost:8000${event.image.startsWith('/uploads') ? event.image : `/uploads/${event.image}`}` 
+                      ? `${baseURL}${event.image.startsWith('/uploads') ? event.image : `/uploads/\${event.image}`}` 
                       : getEventImage(event.title)
                     } 
                     alt={event.title} 
                     className="event-image"
                   />
-                  {/* ✅ Image ke upar naam permanently dikh raha hai */}
                   <div className="event-title-overlay">
                     <h5>{event.title}</h5>
                   </div>
-                  {/* ✅ Hover par details dikhegi (including location and date) */}
                   <div className="event-overlay">
                     <h5>{event.title}</h5>
                     <p>{event.description}</p>

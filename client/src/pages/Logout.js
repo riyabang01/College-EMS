@@ -6,7 +6,7 @@ const Logout = () => {
 
   useEffect(() => {
     localStorage.removeItem('authToken');
-    navigate('/auth');  // Redirect to the login/signup page immediately
+    navigate('/auth');  
   }, [navigate]);
 
   return (

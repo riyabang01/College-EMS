@@ -7,7 +7,7 @@ const admin = async (req, res, next) => {
       console.log('User not found');
       return res.status(404).json({ message: 'User not found' });
     }
-    console.log('User Role:', user.role);  // Log the role of the user
+    console.log('User Role:', user.role);  
     if (user.role === 'admin') {
       next();
     } else {

@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 const About = () => {
   return (
     <Container className="about-container my-5">
-      <h2 className="text-center mb-3">About Us</h2> {/* Reduced margin-bottom */}
+      <h2 className="text-center mb-3">About Us</h2> 
       <p className="mb-4">
         Welcome to <strong>Event Manager</strong>, your one-stop platform for discovering and managing exciting events. Our goal is to connect event organizers and participants in a seamless, user-friendly way.
       </p>

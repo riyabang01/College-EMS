@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import EventList from '../components/EventList'; // Event List included
+import EventList from '../components/EventList';
 
 const Home = ({ user }) => {
   const navigate = useNavigate();
@@ -13,15 +13,15 @@ const Home = ({ user }) => {
   }, [user, navigate]);
 
   if (user && user.role === 'admin') {
-    return null; // Render nothing if the user is an admin
+    return null; 
   }
 
   return (
     <Container className="mt-5">
-      {/* Welcome Message */}
+     
       <h1 className="text-center mb-5">Welcome to Event Manager</h1>
 
-      {/* Event Categories */}
+     
       <Row className="mb-5">
         <Col md={4}>
           <Card className="mb-4 shadow-lg card-hover">
@@ -64,7 +64,7 @@ const Home = ({ user }) => {
         </Col>
       </Row>
 
-      {/* Event List Section */}
+      
       <EventList />
     </Container>
   );

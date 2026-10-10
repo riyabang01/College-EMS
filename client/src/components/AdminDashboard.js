@@ -12,7 +12,7 @@ const AdminDashboard = () => {
   const [registrants, setRegistrants] = useState([]);
   const [showRegistrantsModal, setShowRegistrantsModal] = useState(false);
 
-  // ✅ Fetch Events
+
   const fetchEvents = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
@@ -21,7 +21,7 @@ const AdminDashboard = () => {
       const config = { headers: { Authorization: `Bearer ${accessToken}` } };
   
       const response = await API.get("/api/events/admin-events", config);
-      console.log("Events fetched:", response.data); // ✅ Debug log
+      console.log("Events fetched:", response.data); 
       setEvents(response.data);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -36,7 +36,7 @@ const AdminDashboard = () => {
     fetchEvents();
   }, []);
 
-  // ✅ Fetch Registrants
+  
   const fetchRegistrants = async (eventId) => {
     try {
       const response = await API.get(`/api/events/${eventId}/registrants`);
@@ -48,7 +48,7 @@ const AdminDashboard = () => {
     }
   };
 
-  // ✅ Show Modal for Creating/Editing Events
+
   const handleShowModal = (event = null) => {
     if (event) {
       setEditMode(true);
@@ -56,7 +56,7 @@ const AdminDashboard = () => {
       setNewEvent({
         title: event.title,
         description: event.description,
-        date: event.date.split("T")[0], // Fix date format
+        date: event.date.split("T")[0], 
         location: event.location || "",
       });
     } else {
@@ -69,13 +69,13 @@ const AdminDashboard = () => {
 
   const handleCloseModal = () => setShowModal(false);
 
-  // ✅ Handle Input Changes
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewEvent((prevEvent) => ({ ...prevEvent, [name]: value }));
   };
 
-  // ✅ Create or Update Event
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -102,7 +102,7 @@ const AdminDashboard = () => {
       }
 
       if (response.status === 200 || response.status === 201) {
-        fetchEvents(); // Refresh events
+        fetchEvents();
         setShowModal(false);
         setNewEvent({ title: "", description: "", date: "", location: "" });
       }
@@ -111,11 +111,11 @@ const AdminDashboard = () => {
     }
   };
 
-  // ✅ Delete Event
+  
   const handleDelete = async (eventId) => {
     try {
       await API.delete(`/api/events/${eventId}`);
-      fetchEvents(); // Refresh events after deleting
+      fetchEvents(); 
     } catch (error) {
       console.error("Error deleting event:", error);
     }
@@ -125,7 +125,7 @@ const AdminDashboard = () => {
     <Container className="admin-dashboard-container mt-5">
       <h2 className="text-center mb-4">Admin Dashboard</h2>
 
-      {/* ✅ Loading Spinner */}
+      
       {loading ? (
         <Spinner animation="border" role="status">
           <span className="visually-hidden">Loading...</span>
@@ -173,12 +173,12 @@ const AdminDashboard = () => {
         </Table>
       )}
 
-      {/* ✅ Create New Event Button */}
+
       <Button variant="primary" onClick={() => handleShowModal()}>
         Create New Event
       </Button>
 
-      {/* ✅ Registrants Modal */}
+   
       <Modal show={showRegistrantsModal} onHide={() => setShowRegistrantsModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Registrants for the Event</Modal.Title>
@@ -198,7 +198,7 @@ const AdminDashboard = () => {
         </Modal.Body>
       </Modal>
 
-      {/* ✅ Create & Edit Events Modal */}
+      
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>{editMode ? "Edit Event" : "Create New Event"}</Modal.Title>

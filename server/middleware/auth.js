@@ -5,9 +5,9 @@ const protect = async (req, res, next) => {
   let token;
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1]; // Extract the token
+    token = req.headers.authorization.split(' ')[1]; 
 
-    // Log token length for debugging instead of printing the entire token
+
     console.log("🔹 Received Token Length:", token.length);
 
     if (!token) {
@@ -15,14 +15,14 @@ const protect = async (req, res, next) => {
     }
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token
-      req.user = await User.findById(decoded.id).select('-password'); // Attach user info
+      const decoded = jwt.verify(token, process.env.JWT_SECRET); 
+      req.user = await User.findById(decoded.id).select('-password'); 
 
       if (!req.user) {
         return res.status(401).json({ message: 'Not authorized, user not found' });
       }
 
-      next(); // Proceed to the next middleware
+      next(); 
     } catch (error) {
       console.error("❌ JWT Error:", error);
 

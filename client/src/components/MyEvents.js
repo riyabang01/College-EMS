@@ -9,39 +9,38 @@ const MyEvents = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const baseURL = process.env.REACT_APP_API_URL || "";
+
   useEffect(() => {
     const fetchMyEvents = async () => {
       try {
         const token = localStorage.getItem('accessToken');
-        console.log("🔹 Token sent in request:", token); // Debugging log
 
         if (!token) {
           setError('User not authenticated');
-          setTimeout(() => navigate('/login'), 1000); // Adding slight delay for smooth user experience
+          setTimeout(() => navigate('/login'), 1000); 
           return;
         }
 
-        // Fetch data from backend API with token in headers
-        const response = await axios.get('http://localhost:8000/api/events/myevents', {
+        const response = await axios.get(`${baseURL}/api/events/myevents`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log("🔹 Response Data:", response.data);  // Log the data for debugging
 
-        setMyEvents(response.data); // Set the event data to state
+        setMyEvents(response.data); 
       } catch (error) {
-        console.error('❌ Error fetching my events:', error.response?.data || error.message);
+        console.error('Error fetching my events:', error.response?.data || error.message);
         if (error.response?.status === 401) {
           setError('Unauthorized access, please log in');
         } else {
           setError('Failed to fetch registered events. Please try again later.');
         }
       } finally {
-        setLoading(false); // Hide loading spinner after request
+        setLoading(false); 
       }
     };
 
     fetchMyEvents();
-  }, [navigate]);
+  }, [navigate, baseURL]);
 
   return (
     <Container className="mt-5">
