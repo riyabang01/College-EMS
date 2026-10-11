@@ -2,7 +2,8 @@
   "version": 2,
   "services": {
     "frontend": {
-      "root": "client/"
+      "root": "client/",
+      "buildCommand": "CI=false npm run build"
     },
     "backend": {
       "root": "server/",
