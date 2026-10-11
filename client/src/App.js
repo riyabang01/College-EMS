@@ -13,11 +13,10 @@ import EventList from './components/EventList';
 import MyEvents from './components/MyEvents';
 import { AuthProvider } from './context/AuthContext';
 
-
 const App = () => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     const role = localStorage.getItem('role');
@@ -25,18 +24,19 @@ const App = () => {
     if (accessToken && role) {
       setUser({ token: accessToken, role });
     }
+    setLoading(false);
   }, []);
 
- 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('role');
     setUser(null);  
   };
 
- 
   const ProtectedRoute = ({ children, role }) => {
     const location = useLocation();
+    
+    if (loading) return <div className="text-center mt-5">Loading...</div>;
     
     if (!user) {
       return <Navigate to="/login" state={{ from: location }} replace />;
@@ -49,8 +49,9 @@ const App = () => {
     return children;
   };
 
-  
   const AuthRoute = ({ children }) => {
+    if (loading) return <div className="text-center mt-5">Loading...</div>;
+
     if (user) {
       return <Navigate to="/" replace />;
     }
