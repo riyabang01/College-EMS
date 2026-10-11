@@ -33,8 +33,20 @@
       "destination": "server/server.js"
     },
     {
+      "source": "/static/(.*)",
+      "destination": "client/static/$1"
+    },
+    {
+      "source": "/manifest.json",
+      "destination": "client/manifest.json"
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "client/favicon.ico"
+    },
+    {
       "source": "/(.*)",
-      "destination": "client/build/index.html"
+      "destination": "client/index.html"
     }
   ]
 }
