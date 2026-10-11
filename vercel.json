@@ -5,7 +5,7 @@
       "root": "client/"
     },
     "backend": {
-      "root": ".",
+      "root": "server/",
       "entrypoint": "server.js"
     }
   },
