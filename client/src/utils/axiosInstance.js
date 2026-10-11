@@ -1,13 +1,12 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "",
+  baseURL: process.env.REACT_APP_API_URL || window.location.origin,
   withCredentials: true, 
 });
 
 const getAccessToken = () => {
-  const token = localStorage.getItem("accessToken");
-  return token || null;
+  return localStorage.getItem("accessToken") || null;
 };
 
 API.interceptors.request.use(
@@ -29,7 +28,7 @@ API.interceptors.response.use(
     if (error.response?.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const refreshBaseURL = process.env.REACT_APP_API_URL || "";
+        const refreshBaseURL = process.env.REACT_APP_API_URL || window.location.origin;
         const { data } = await axios.post(
           `${refreshBaseURL}/api/auth/refresh`, 
           {},
@@ -39,7 +38,7 @@ API.interceptors.response.use(
         localStorage.setItem("accessToken", data.accessToken);
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
 
-        return API(originalRequest); 
+        return axios(originalRequest); 
       } catch (refreshError) {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");

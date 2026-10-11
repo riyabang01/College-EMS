@@ -12,42 +12,39 @@ const AdminDashboard = () => {
   const [registrants, setRegistrants] = useState([]);
   const [showRegistrantsModal, setShowRegistrantsModal] = useState(false);
 
+  const getAuthConfig = () => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return {};
+    return { headers: { Authorization: `Bearer ${accessToken}` } };
+  };
 
   const fetchEvents = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
-      if (!accessToken) throw new Error("No token found");
-  
-      const config = { headers: { Authorization: `Bearer ${accessToken}` } };
-  
+      const config = getAuthConfig();
       const response = await API.get("/api/events/admin-events", config);
-      console.log("Events fetched:", response.data); 
       setEvents(response.data);
     } catch (error) {
-      console.error("Error fetching events:", error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
-  
-  
 
   useEffect(() => {
     fetchEvents();
   }, []);
 
-  
   const fetchRegistrants = async (eventId) => {
     try {
-      const response = await API.get(`/api/events/${eventId}/registrants`);
+      const config = getAuthConfig();
+      const response = await API.get(`/api/events/${eventId}/registrants`, config);
       setRegistrants(Array.isArray(response.data) ? response.data : []);
       setShowRegistrantsModal(true);
     } catch (error) {
-      console.error("Error fetching registrants:", error);
+      console.error(error);
       setRegistrants([]);
     }
   };
-
 
   const handleShowModal = (event = null) => {
     if (event) {
@@ -56,7 +53,7 @@ const AdminDashboard = () => {
       setNewEvent({
         title: event.title,
         description: event.description,
-        date: event.date.split("T")[0], 
+        date: event.date ? event.date.split("T")[0] : "", 
         location: event.location || "",
       });
     } else {
@@ -69,69 +66,62 @@ const AdminDashboard = () => {
 
   const handleCloseModal = () => setShowModal(false);
 
-  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewEvent((prevEvent) => ({ ...prevEvent, [name]: value }));
   };
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!newEvent.title || !newEvent.description || !newEvent.date || !newEvent.location) {
       alert("Please fill in all required fields!");
       return;
     }
-
     try {
-      const accessToken = localStorage.getItem("accessToken");
-      const config = { headers: { Authorization: `Bearer ${accessToken}` } };
+      const config = getAuthConfig();
       const formData = {
         title: newEvent.title,
         description: newEvent.description,
         date: newEvent.date,
         location: newEvent.location,
       };
-
       let response;
       if (editMode) {
         response = await API.put(`/api/events/${currentEventId}`, formData, config);
       } else {
         response = await API.post("/api/events", formData, config);
       }
-
       if (response.status === 200 || response.status === 201) {
         fetchEvents();
         setShowModal(false);
         setNewEvent({ title: "", description: "", date: "", location: "" });
       }
     } catch (error) {
-      console.error("Error creating/updating event:", error);
+      console.error(error);
     }
   };
 
-  
   const handleDelete = async (eventId) => {
     try {
-      await API.delete(`/api/events/${eventId}`);
+      const config = getAuthConfig();
+      await API.delete(`/api/events/${eventId}`, config);
       fetchEvents(); 
     } catch (error) {
-      console.error("Error deleting event:", error);
+      console.error(error);
     }
   };
 
   return (
     <Container className="admin-dashboard-container mt-5">
       <h2 className="text-center mb-4">Admin Dashboard</h2>
-
-      
       {loading ? (
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
+        <div className="text-center my-5">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
       ) : (
-        <Table striped bordered hover>
+        <Table striped bordered hover responsive>
           <thead>
             <tr>
               <th>Title</th>
@@ -142,43 +132,37 @@ const AdminDashboard = () => {
             </tr>
           </thead>
           <tbody>
-            {events.map((event) => (
-              <tr key={event._id}>
-                <td>{event.title}</td>
-                <td>{event.description}</td>
-                <td>{new Date(event.date).toLocaleDateString()}</td>
-                <td>{event.location}</td>
-                <td>
-                  <Button
-                    variant="info"
-                    onClick={() => fetchRegistrants(event._id)}
-                    className="me-2"
-                  >
-                    <i className="bi bi-eye"></i> View Registrants
-                  </Button>
-                  <Button
-                    variant="warning"
-                    onClick={() => handleShowModal(event)}
-                    className="me-2"
-                  >
-                    Edit
-                  </Button>
-                  <Button variant="danger" onClick={() => handleDelete(event._id)}>
-                    Delete
-                  </Button>
-                </td>
+            {events && events.length > 0 ? (
+              events.map((event) => (
+                <tr key={event._id}>
+                  <td>{event.title}</td>
+                  <td>{event.description}</td>
+                  <td>{event.date ? new Date(event.date).toLocaleDateString() : "N/A"}</td>
+                  <td>{event.location}</td>
+                  <td>
+                    <Button variant="info" onClick={() => fetchRegistrants(event._id)} className="me-2">
+                      View Registrants
+                    </Button>
+                    <Button variant="warning" onClick={() => handleShowModal(event)} className="me-2">
+                      Edit
+                    </Button>
+                    <Button variant="danger" onClick={() => handleDelete(event._id)}>
+                      Delete
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center">No events found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </Table>
       )}
-
-
-      <Button variant="primary" onClick={() => handleShowModal()}>
+      <Button variant="primary" className="mt-3" onClick={() => handleShowModal()}>
         Create New Event
       </Button>
-
-   
       <Modal show={showRegistrantsModal} onHide={() => setShowRegistrantsModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Registrants for the Event</Modal.Title>
@@ -197,8 +181,6 @@ const AdminDashboard = () => {
           )}
         </Modal.Body>
       </Modal>
-
-      
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>{editMode ? "Edit Event" : "Create New Event"}</Modal.Title>
@@ -207,43 +189,19 @@ const AdminDashboard = () => {
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formTitle">
               <Form.Label>Title</Form.Label>
-              <Form.Control
-                type="text"
-                name="title"
-                value={newEvent.title}
-                onChange={handleChange}
-                required
-              />
+              <Form.Control type="text" name="title" value={newEvent.title} onChange={handleChange} required />
             </Form.Group>
             <Form.Group controlId="formDescription" className="mt-3">
               <Form.Label>Description</Form.Label>
-              <Form.Control
-                type="text"
-                name="description"
-                value={newEvent.description}
-                onChange={handleChange}
-                required
-              />
+              <Form.Control type="text" name="description" value={newEvent.description} onChange={handleChange} required />
             </Form.Group>
             <Form.Group controlId="formDate" className="mt-3">
               <Form.Label>Date</Form.Label>
-              <Form.Control
-                type="date"
-                name="date"
-                value={newEvent.date}
-                onChange={handleChange}
-                required
-              />
+              <Form.Control type="date" name="date" value={newEvent.date} onChange={handleChange} required />
             </Form.Group>
             <Form.Group controlId="formLocation" className="mt-3">
               <Form.Label>Location</Form.Label>
-              <Form.Control
-                type="text"
-                name="location"
-                value={newEvent.location}
-                onChange={handleChange}
-                required
-              />
+              <Form.Control type="text" name="location" value={newEvent.location} onChange={handleChange} required />
             </Form.Group>
             <Button variant="primary" type="submit" className="mt-4">
               {editMode ? "Update Event" : "Create Event"}
