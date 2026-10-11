@@ -18,10 +18,7 @@ const Home = ({ user }) => {
 
   return (
     <Container className="mt-5">
-     
       <h1 className="text-center mb-5">Welcome to Event Manager</h1>
-
-     
       <Row className="mb-5">
         <Col md={4}>
           <Card className="mb-4 shadow-lg card-hover">
@@ -30,7 +27,7 @@ const Home = ({ user }) => {
               <Card.Text>
                 Check out the upcoming events and register for the ones you are interested in.
               </Card.Text>
-              <Card.Link as={Link} to="/upcoming-events" className="btn btn-primary">
+              <Card.Link as={Link} to="/upcoming" className="btn btn-primary">
                 View Events
               </Card.Link>
             </Card.Body>
@@ -63,8 +60,6 @@ const Home = ({ user }) => {
           </Card>
         </Col>
       </Row>
-
-      
       <EventList />
     </Container>
   );

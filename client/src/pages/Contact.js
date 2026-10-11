@@ -7,6 +7,8 @@ const Contact = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const baseURL = process.env.REACT_APP_API_URL || "";
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -19,7 +21,7 @@ const Contact = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch(`${baseURL}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

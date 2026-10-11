@@ -1,6 +1,8 @@
-const loginUser = async (email, password, navigate) => {
+const baseURL = process.env.REACT_APP_API_URL || "";
+
+const loginUser = async (email, password, navigate, loginFromContext) => {
   try {
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch(`${baseURL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -10,9 +12,13 @@ const loginUser = async (email, password, navigate) => {
 
     if (response.ok) {
       if (data.accessToken && data.refreshToken && data.user) {
-        localStorage.setItem('accessToken', data.accessToken);
-        localStorage.setItem('refreshToken', data.refreshToken);
-        localStorage.setItem('user', JSON.stringify(data.user));  
+        if (loginFromContext) {
+          loginFromContext(data);
+        } else {
+          localStorage.setItem('accessToken', data.accessToken);
+          localStorage.setItem('refreshToken', data.refreshToken);
+          localStorage.setItem('user', JSON.stringify(data.user));  
+        }
 
         if (data.user.role === 'admin') {
           navigate('/admin-dashboard');
@@ -38,7 +44,7 @@ const refreshToken = async () => {
   }
 
   try {
-    const response = await fetch('/api/auth/refresh', {
+    const response = await fetch(`${baseURL}/api/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refreshToken: token }),
@@ -67,7 +73,7 @@ const fetchData = async (url) => {
   }
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch(url.startsWith('http') ? url : `${baseURL}${url}`, {
       method: 'GET',
       headers: { 'Authorization': `Bearer ${accessToken}` },
     });

@@ -10,7 +10,7 @@ const Gallery = () => {
     const fetchGallery = async () => {
       try {
         const { data } = await axios.get(`${baseURL}/api/gallery`);
-        setImages(data.images);
+        setImages(data.images || data);
       } catch (error) {
         console.error('Failed to fetch gallery:', error);
       }

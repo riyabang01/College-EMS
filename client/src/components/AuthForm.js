@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Button, Form, Container, Row, Col, Card } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
-const AuthForm = ({ setUser = () => {} }) => {
+const AuthForm = () => {
   const [name, setName] = useState(""); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,6 +15,7 @@ const AuthForm = ({ setUser = () => {} }) => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useAuth();
   const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {
@@ -38,13 +40,8 @@ const AuthForm = ({ setUser = () => {} }) => {
       const baseURL = process.env.REACT_APP_API_URL || "";
       const response = await axios.post(`${baseURL}${endpoint}`, payload);
 
-      if (response.data.accessToken && response.data.refreshToken) {
-        localStorage.setItem("accessToken", response.data.accessToken);
-        localStorage.setItem("refreshToken", response.data.refreshToken);
-        localStorage.setItem("role", response.data.user.role);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-
-        setUser({ token: response.data.accessToken, role: response.data.user.role });
+      if (response.data && response.data.accessToken) {
+        login(response.data);
 
         const targetRole = response.data.user.role;
         navigate(targetRole === "admin" ? "/admin-dashboard" : from, { replace: true });
@@ -67,7 +64,6 @@ const AuthForm = ({ setUser = () => {} }) => {
               <h2 className="text-center">{isLogin ? "Login" : "Signup"}</h2>
               {error && <p className="text-danger text-center">{error}</p>}
               <Form onSubmit={handleSubmit} autoComplete="off">
-                
                 {!isLogin && (
                   <Form.Group controlId="formBasicName">
                     <Form.Label>Full Name</Form.Label>
@@ -82,7 +78,6 @@ const AuthForm = ({ setUser = () => {} }) => {
                     />
                   </Form.Group>
                 )}
-
                 <Form.Group controlId="formBasicEmail" className="mt-3">
                   <Form.Label>Email address</Form.Label>
                   <Form.Control
@@ -95,7 +90,6 @@ const AuthForm = ({ setUser = () => {} }) => {
                     autoComplete="new-email"
                   />
                 </Form.Group>
-
                 <Form.Group controlId="formBasicPassword" className="mt-3">
                   <Form.Label>Password</Form.Label>
                   <Form.Control
@@ -108,7 +102,6 @@ const AuthForm = ({ setUser = () => {} }) => {
                     autoComplete="new-password"
                   />
                 </Form.Group>
-
                 {!isLogin && (
                   <Form.Group controlId="formBasicRole" className="mt-3">
                     <Form.Label>Role</Form.Label>
@@ -118,12 +111,10 @@ const AuthForm = ({ setUser = () => {} }) => {
                     </Form.Select>
                   </Form.Group>
                 )}
-
                 <Button variant="primary" type="submit" className="mt-3 w-100" disabled={loading}>
                   {loading ? "Processing..." : isLogin ? "Login" : "Signup"}
                 </Button>
               </Form>
-
               <Button variant="link" onClick={() => setIsLogin(!isLogin)} className="mt-3 w-100 text-center">
                 {isLogin ? "Switch to Signup" : "Switch to Login"}
               </Button>

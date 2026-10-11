@@ -25,7 +25,7 @@ API.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 403 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const refreshBaseURL = process.env.REACT_APP_API_URL || window.location.origin;
@@ -38,7 +38,7 @@ API.interceptors.response.use(
         localStorage.setItem("accessToken", data.accessToken);
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
 
-        return axios(originalRequest); 
+        return API(originalRequest); 
       } catch (refreshError) {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");

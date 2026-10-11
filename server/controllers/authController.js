@@ -1,8 +1,12 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
-const generateToken = (id) => {
+const generateAccessToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+};
+
+const generateRefreshToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET, { expiresIn: '7d' });
 };
 
 const registerUser = async (req, res) => {
@@ -14,19 +18,25 @@ const registerUser = async (req, res) => {
     }
     const user = await User.create({ name, email, password, role: role || 'user' });
     if (user) {
-      const accessToken = generateToken(user._id);
+      const accessToken = generateAccessToken(user._id);
+      const refreshToken = generateRefreshToken(user._id);
+
       res.cookie('jwt', accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: 3600000
       });
+
       res.status(201).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        accessToken
+        accessToken,
+        refreshToken,
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        }
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
@@ -41,19 +51,25 @@ const loginUser = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (user && (await user.comparePassword(password))) {
-      const accessToken = generateToken(user._id);
+      const accessToken = generateAccessToken(user._id);
+      const refreshToken = generateRefreshToken(user._id);
+
       res.cookie('jwt', accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: 3600000
       });
+
       res.status(200).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        accessToken
+        accessToken,
+        refreshToken,
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        }
       });
     } else {
       res.status(401).json({ message: 'Invalid email or password' });

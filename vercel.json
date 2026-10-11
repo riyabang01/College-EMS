@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "services": {
+    "frontend": {
+      "root": "client/"
+    },
+    "backend": {
+      "root": ".",
+      "entrypoint": "server.js"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/uploads/(.*)",
+      "destination": { "service": "backend" }
+    },
+    {
+      "source": "/(.*)",
+      "destination": { "service": "frontend" }
+    }
+  ]
+}

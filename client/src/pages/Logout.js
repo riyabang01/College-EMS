@@ -5,14 +5,17 @@ const Logout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.removeItem('authToken');
-    navigate('/auth');  
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('role');
+    navigate('/login');  
   }, [navigate]);
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center vh-100">
       <h2>You have logged out successfully.</h2>
-      <button className="btn btn-info mt-3" onClick={() => navigate('/auth')}>
+      <button className="btn btn-info mt-3" onClick={() => navigate('/login')}>
         Go to Login/Signup
       </button>
     </div>

@@ -34,7 +34,10 @@ app.use(cors({
 
 app.use(async (req, res, next) => {
   try {
-    await connectDB();
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState === 0) {
+      await connectDB();
+    }
     next();
   } catch (error) {
     next(error);
@@ -53,9 +56,16 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message });
 });
 
-if (process.env.NODE_ENV !== 'production') {
+if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 8000;
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  app.listen(PORT, async () => {
+    console.log(`Server running locally on port ${PORT}`);
+    try {
+      await connectDB();
+    } catch (err) {
+      console.error('Database pre-connect failed:', err.message);
+    }
+  });
 }
 
 module.exports = app;
