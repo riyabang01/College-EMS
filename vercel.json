@@ -1,28 +1,29 @@
 {
+  "version": 2,
   "rewrites": [
     {
       "source": "/api/auth/(.*)",
-      "destination": "/server/server.js"
+      "destination": "server/server.js"
     },
     {
       "source": "/api/users/(.*)",
-      "destination": "/server/server.js"
+      "destination": "server/server.js"
     },
     {
       "source": "/api/events/(.*)",
-      "destination": "/server/server.js"
+      "destination": "server/server.js"
     },
     {
       "source": "/api/contact/(.*)",
-      "destination": "/server/server.js"
+      "destination": "server/server.js"
     },
     {
       "source": "/uploads/(.*)",
-      "destination": "/server/server.js"
+      "destination": "server/server.js"
     },
     {
       "source": "/(.*)",
-      "destination": "/client/index.html"
+      "destination": "client/build/index.html"
     }
   ]
 }
